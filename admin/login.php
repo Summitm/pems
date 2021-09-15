@@ -32,16 +32,21 @@
                         </div>
                     </div>
                     <div class="row justify-conten-center">
+                        <p class="mb-1">
+                            <a href="forgot-password.html">Forgot your password?</a>
+                        </p>
+                    </div>
+                    <div class="row justify-conten-center">
                         <!-- /.col -->
                         <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         <!-- /.col -->
                     </div>
                 </form>
                 <!-- /.social-auth-links -->
-
-                <!-- <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p> -->
+                <br>
+                <div class="row justify-conten-center">
+                    <p class="mb-1 text-dark">Dont have an account?<a href="forgot-password.html">Sign up!</a></p>
+                </div>
 
             </div>
             <!-- /.card-body -->

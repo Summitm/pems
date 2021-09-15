@@ -1,2 +1,2 @@
 <?php require_once('config.php'); ?>
-<?php redirect('./app') ?>
+<?php redirect('./admin') ?>
