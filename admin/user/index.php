@@ -1,66 +1,87 @@
-<?php 
+<?php
+require_once('../../config.php');
 $user = $conn->query("SELECT * FROM users where id ='".$_settings->userdata('id')."'");
 foreach($user->fetch_array() as $k =>$v){
 	$meta[$k] = $v;
 }
 ?>
-<?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
-<?php endif;?>
-<div class="card card-outline card-primary">
-	<div class="card-body">
-		<div class="container-fluid">
-			<div id="msg"></div>
-			<form action="" id="manage-user">	
-				<input type="hidden" name="id" value="<?php echo $_settings->userdata('id') ?>">
-				<div class="form-group">
-					<label for="name">First Name</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
-				</div>
-				<div class="form-group">
-					<label for="name">Last Name</label>
-					<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
-				</div>
-				<div class="form-group">
-					<label for="username">Username</label>
-					<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
-				</div>
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
-					<small><i>Leave this blank if you dont want to change the password.</i></small>
-				</div>
-				<div class="form-group">
-					<label for="" class="control-label">Avatar</label>
-					<div class="custom-file">
-		              <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))">
-		              <label class="custom-file-label" for="customFile">Choose file</label>
-		            </div>
-				</div>
-				<div class="form-group d-flex justify-content-center">
-					<img src="<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="card-footer">
-			<div class="col-md-12">
-				<div class="row">
-					<button class="btn btn-sm btn-primary" form="manage-user">Update</button>
+<!DOCTYPE html>
+	<html lang="en" class="" style="height: auto;">
+	<?php require_once('../inc/header.php') ?>
+
+	<body class="hold-transition login-page bg-navy">
+		<script>
+		start_loader()
+		</script>
+		<div class="login-box">
+		<div class="card card-outline card-primary">
+			<div class="card-body">
+				<div class="container-fluid">
+					<div id="msg"></div>
+					<form action="" id="manage-user" style="max-height:530px">	
+						<!-- <input type="hidden" name="id" value=""> -->
+						<!-- <php //echo $_settings->userdata('id') ?> -->
+						<p class="login-box-msg text-dark">Sign Up</p>
+
+						<?php if($_settings->chk_flashdata('success')): ?>
+							<script>
+								alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+							</script>
+						<?php endif;?>
+						<div class="form-group">
+							<label for="name" class="text-dark">First Name</label>
+							<input type="text" name="firstname" id="firstname" placeholder="Jane" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+						</div>
+						<div class="form-group">
+							<label for="name" class="text-dark">Last Name</label>
+							<input type="text" name="lastname" id="lastname" placeholder="Doe" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
+						</div>
+						<div class="form-group">
+							<label for="username" class="text-dark">Username</label>
+							<input type="email" name="username" id="username" placeholder="hello@example.com" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
+						</div>
+						<div class="form-group">
+							<label for="password" class="text-dark">Password</label>
+							<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
+							<!-- <small><i>Leave this blank if you dont want to change the password.</i></small> -->
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label text-dark">Avatar</label>
+							<div class="custom-file">
+							<input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))">
+							<label class="custom-file-label text-dark" for="customFile">Choose file</label>
+							</div>
+						</div>
+						<div class="form-group d-flex justify-content-center">
+							<img src="<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+						</div>
+					</form>
 				</div>
 			</div>
+			<div class="card-footer">
+					<div class="col-md-12">
+						<div class="row">
+							<button class="btn btn-primary btn-block" form="manage-user">Register</button>
+						</div>
+					</div>
+				</div>
 		</div>
-</div>
+	</div>
 <style>
 	img#cimg{
-		height: 15vh;
-		width: 15vh;
+		height: 10vh;
+		width: 10vh;
 		object-fit: cover;
 		border-radius: 100% 100%;
 	}
 </style>
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="dist/js/adminlte.min.js"></script>
 <script>
 	function displayImg(input,_this) {
 	    if (input.files && input.files[0]) {
@@ -77,7 +98,7 @@ foreach($user->fetch_array() as $k =>$v){
 		start_loader()
 		$.ajax({
 			url:_base_url_+'classes/Users.php?f=save',
-			data: new FormData($(this)[0]),
+			data: new FormData($(this)),
 		    cache: false,
 		    contentType: false,
 		    processData: false,
@@ -87,7 +108,7 @@ foreach($user->fetch_array() as $k =>$v){
 				if(resp ==1){
 					location.reload()
 				}else{
-					$('#msg').html('<div class="alert alert-danger">Username already exist</div>')
+					$('#msg').html('<div class="alert alert-danger">An error occured! Please try again later!</div>')
 					end_loader()
 				}
 			}
@@ -95,3 +116,12 @@ foreach($user->fetch_array() as $k =>$v){
 	})
 
 </script>
+
+<script>
+    $(document).ready(function() {
+        end_loader();
+    })
+    </script>
+</body>
+
+</html>

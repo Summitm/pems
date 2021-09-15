@@ -22,6 +22,7 @@ Class Master extends DBConnection {
 	}
 	function save_category(){
 		extract($_POST);
+		$user_ID = $this->settings->userdata('id');
 		$data = "";
 		foreach($_POST as $k =>$v){
 			if(!in_array($k,array('id','description'))){
@@ -33,7 +34,9 @@ Class Master extends DBConnection {
 			if(!empty($data)) $data .=",";
 				$data .= " `description`='".addslashes(htmlentities($description))."' ";
 		}
-		$check = $this->conn->query("SELECT * FROM `categories` where `category` = '{$category}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
+		if(!empty($data)) $data .=",";
+			$data .= " `user_id`='{$this->settings->userdata('id')}' ";
+		$check = $this->conn->query("SELECT * FROM `categories` where `user_id` = '{$user_ID}' and `category` = '{$category}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
 		if($this->capture_err())
 			return $this->capture_err();
 		if($check > 0){
@@ -75,10 +78,10 @@ Class Master extends DBConnection {
 
 	}
 	function update_balance($category_id){
-		$budget = $this->conn->query("SELECT SUM(amount) as total FROM `running_balance` where `balance_type` = 1 and `category_id` = '{$category_id}' and `user_id` = '{$user_id}' ")->fetch_assoc()['total'];
-		$expense = $this->conn->query("SELECT SUM(amount) as total FROM `running_balance` where `balance_type` = 2 and `category_id` = '{$category_id}' and `user_id` = '{$user_id}'")->fetch_assoc()['total'];
+		$budget = $this->conn->query("SELECT SUM(amount) as total FROM `running_balance` where `balance_type` = 1 and `category_id` = '{$category_id}' and `user_id` = '{$this->settings->userdata('id')}' ")->fetch_assoc()['total'];
+		$expense = $this->conn->query("SELECT SUM(amount) as total FROM `running_balance` where `balance_type` = 2 and `category_id` = '{$category_id}' and `user_id` = '{$this->settings->userdata('id')}'")->fetch_assoc()['total'];
 		$balance = $budget - $expense;
-		$update  = $this->conn->query("UPDATE `categories` set `balance` = '{$balance}' where `id` = '{$category_id}' ");
+		$update  = $this->conn->query("UPDATE `categories` set `balance` = '{$balance}' where `id` = '{$category_id}'");
 		if($update){
 			return true;
 		}else{
